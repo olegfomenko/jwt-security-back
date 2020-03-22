@@ -1,8 +1,11 @@
 package com.redlab.plainnet.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchProfile;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,7 +20,7 @@ public class User extends BaseEntity {
 
     @Column(name = "roles")
     @Enumerated(EnumType.STRING)
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "roles")
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
 }
