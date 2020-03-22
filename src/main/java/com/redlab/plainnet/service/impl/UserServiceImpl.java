@@ -2,7 +2,7 @@ package com.redlab.plainnet.service.impl;
 
 import com.redlab.plainnet.dao.UserDAO;
 import com.redlab.plainnet.entity.Role;
-import com.redlab.plainnet.entity.User;
+import com.redlab.plainnet.entity.UserEntity;
 import com.redlab.plainnet.exception.BadCredentialsException;
 import com.redlab.plainnet.exception.CredentialsException;
 import com.redlab.plainnet.exception.UserExistsException;
@@ -23,12 +23,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByUsername(String username) {
+    public UserEntity findByUsername(String username) {
         return userDAO.findByUsername(username);
     }
 
     @Override
-    public User save(User user) throws CredentialsException {
+    public UserEntity save(UserEntity user) throws CredentialsException {
         if(user.getUsername() == null || user.getPassword() == null) {
             throw new BadCredentialsException();
         }
@@ -42,6 +42,14 @@ public class UserServiceImpl implements UserService {
             userDAO.save(user);
             return user;
         }
+    }
+
+    @Override
+    public UserEntity save(String username, String password) throws CredentialsException {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUsername(username);
+        userEntity.setPassword(password);
+        return save(userEntity);
     }
 
     @Override

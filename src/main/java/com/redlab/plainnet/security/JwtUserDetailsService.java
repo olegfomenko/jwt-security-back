@@ -1,10 +1,11 @@
 package com.redlab.plainnet.security;
 
-import com.redlab.plainnet.entity.User;
+import com.redlab.plainnet.entity.UserEntity;
 import com.redlab.plainnet.service.RoleService;
 import com.redlab.plainnet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -23,18 +24,18 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws AuthenticationException {
-        User user = userService.findByUsername(username);
+        UserEntity userEntity = userService.findByUsername(username);
 
-        if(user == null) {
+        if(userEntity == null) {
             throw new UsernameNotFoundException("Username: " + username + " not found!");
         }
 
-        JwtUser jwtUser = new JwtUser(
-                user.getUsername(),
-                user.getPassword(),
-                roleService.toGrantedAuthorityList(user.getRoles())
+        User user = new User(
+                userEntity.getUsername(),
+                userEntity.getPassword(),
+                roleService.toGrantedAuthorityList(userEntity.getRoles())
         );
 
-        return jwtUser;
+        return user;
     }
 }

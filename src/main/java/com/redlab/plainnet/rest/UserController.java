@@ -1,6 +1,8 @@
 package com.redlab.plainnet.rest;
 
-import com.redlab.plainnet.entity.User;
+import com.redlab.plainnet.dto.LoginRequest;
+import com.redlab.plainnet.dto.LoginResponse;
+import com.redlab.plainnet.entity.UserEntity;
 import com.redlab.plainnet.exception.CredentialsException;
 import com.redlab.plainnet.service.TokenService;
 import com.redlab.plainnet.service.UserService;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,26 +36,29 @@ public class UserController {
     }
 
     @RequestMapping(value = "/registration", method = RequestMethod.POST)
-    public ResponseEntity registration(@RequestBody User user) {
+    public ResponseEntity registration(@RequestBody LoginRequest request) throws CredentialsException {
         try {
-            userService.save(user);
+            userService.save(request.getUsername(), request.getPassword());
             return ResponseEntity.ok().build();
         } catch (CredentialsException e) {
             log.error(e.getMessage());
-            return new ResponseEntity(Collections.singletonMap("msg", e.getMessage()), HttpStatus.CONFLICT);
+            throw e;
         }
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public ResponseEntity login(@RequestBody User user) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        user = userService.findByUsername(user.getUsername());
+    public ResponseEntity login(@RequestBody LoginRequest request) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        UserEntity user = userService.findByUsername(request.getUsername());
         String token = tokenService.createToken(user.getUsername(), user.getRoles());
-        return ResponseEntity.ok(Collections.singletonMap("token", token));
+        return ResponseEntity.ok(new LoginResponse(token));
     }
 
     @RequestMapping(value = "/check", method = RequestMethod.GET)
-    public ResponseEntity check() {
+    public ResponseEntity check() throws InterruptedException {
+        log.info(SecurityContextHolder.getContext().getAuthentication().getName() + " entered endpoint!");
+        Thread.sleep(5000);
+        log.info(SecurityContextHolder.getContext().getAuthentication().getName() + " exit endpoint!");
         return ResponseEntity.ok().build();
     }
 }

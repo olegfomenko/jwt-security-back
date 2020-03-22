@@ -1,11 +1,11 @@
 package com.redlab.plainnet.service;
 
-import com.redlab.plainnet.entity.User;
+import com.redlab.plainnet.entity.UserEntity;
 import com.redlab.plainnet.exception.CredentialsException;
-import com.redlab.plainnet.exception.UserExistsException;
 
 public interface UserService {
-    User findByUsername(String username);
-    User save(User user) throws CredentialsException;
+    UserEntity findByUsername(String username);
+    UserEntity save(UserEntity user) throws CredentialsException;
+    UserEntity save(String username, String password) throws CredentialsException;
     boolean isExists(String username);
 }

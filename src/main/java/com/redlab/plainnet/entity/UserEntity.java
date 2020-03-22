@@ -3,6 +3,7 @@ package com.redlab.plainnet.entity;
 import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchProfile;
+import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Data
 @Table(name = "users")
-public class User extends BaseEntity {
+public class UserEntity extends BaseEntity {
     @Column(name = "username")
     private String username;
 
