@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -56,9 +57,6 @@ public class UserController {
 
     @RequestMapping(value = "/check", method = RequestMethod.GET)
     public ResponseEntity check() throws InterruptedException {
-        log.info(SecurityContextHolder.getContext().getAuthentication().getName() + " entered endpoint!");
-        Thread.sleep(5000);
-        log.info(SecurityContextHolder.getContext().getAuthentication().getName() + " exit endpoint!");
         return ResponseEntity.ok().build();
     }
 }
