@@ -1,7 +1,6 @@
 package com.redlab.plainnet.service.impl;
 
 import com.redlab.plainnet.entity.Role;
-import com.redlab.plainnet.exception.TokenExpiredException;
 import com.redlab.plainnet.security.JwtUserDetailsService;
 import com.redlab.plainnet.service.RoleService;
 import com.redlab.plainnet.service.TokenService;

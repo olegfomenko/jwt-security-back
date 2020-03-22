@@ -1,9 +1,6 @@
 package com.redlab.plainnet.entity;
 
 import lombok.Data;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchProfile;
-import org.springframework.security.core.userdetails.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
