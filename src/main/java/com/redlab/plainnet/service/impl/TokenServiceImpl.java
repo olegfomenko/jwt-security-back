@@ -6,6 +6,7 @@ import com.redlab.plainnet.security.JwtUserDetailsService;
 import com.redlab.plainnet.service.RoleService;
 import com.redlab.plainnet.service.TokenService;
 import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class TokenServiceImpl implements TokenService {
     @Value("${jwt.token.secret}")
     private String secret;
@@ -78,7 +80,7 @@ public class TokenServiceImpl implements TokenService {
     }
 
     @Override
-    public boolean validateToken(String token) throws TokenExpiredException {
+    public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
 
@@ -88,7 +90,8 @@ public class TokenServiceImpl implements TokenService {
 
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new TokenExpiredException();
+            log.error(e.getMessage());
+            return false;
         }
     }
 }
