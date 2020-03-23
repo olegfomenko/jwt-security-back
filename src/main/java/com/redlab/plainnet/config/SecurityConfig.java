@@ -1,6 +1,6 @@
 package com.redlab.plainnet.config;
 
-import com.redlab.plainnet.security.SecurityChainConfigurator;
+import com.redlab.plainnet.security.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,16 +9,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final SecurityChainConfigurator securityChainConfigurator;
+    private final JwtFilter jwtFilter;
 
     @Autowired
-    public SecurityConfig(SecurityChainConfigurator securityChainConfigurator) {
-        this.securityChainConfigurator = securityChainConfigurator;
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
     }
 
     @Bean
@@ -39,6 +40,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/check").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
-                .apply(securityChainConfigurator);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
